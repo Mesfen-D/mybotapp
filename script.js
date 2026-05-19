@@ -1,6 +1,9 @@
 // Initialize Telegram WebApp SDK
 const tg = window.Telegram.WebApp;
 
+// Tell Telegram app the Web App is ready
+tg.ready();
+
 // Expand to full height
 tg.expand();
 
@@ -178,7 +181,8 @@ function prevStep() {
     window.scrollTo(0, 0);
 }
 
-function sendOrder() {
+function sendOrder(e) {
+    if (e) e.preventDefault();
     try {
         const btn = document.getElementById('mainBtn');
         btn.textContent = translations[currentLang].sendingText;
