@@ -4,11 +4,6 @@ const tg = window.Telegram.WebApp;
 // Expand to full height
 tg.expand();
 
-// Optionally set the MainButton from SDK instead of custom HTML button
-// tg.MainButton.text = "ትዕዛዝ ላክ (Send Order)";
-// tg.MainButton.show();
-// Telegram.WebApp.onEvent('mainButtonClicked', sendOrder);
-
 function handleTypeChange() {
     const type = document.getElementById('design_type').value;
     
@@ -33,17 +28,62 @@ function handleTypeChange() {
 // Initial setup
 handleTypeChange();
 
+function updateFileName() {
+    const input = document.getElementById('design-photo');
+    const display = document.getElementById('file-name-display');
+    if (input.files && input.files[0]) {
+        display.textContent = "✅ " + input.files[0].name;
+    } else {
+        display.textContent = "📸 ፎቶ ይምረጡ / Select Photo";
+    }
+}
+
+// Resizes image heavily to fit within Telegram WebApp sendData limit (4096 bytes)
+function resizeImage(file, maxSize, callback) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+                if (width > maxSize) {
+                    height *= maxSize / width;
+                    width = maxSize;
+                }
+            } else {
+                if (height > maxSize) {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+            }
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Compress very aggressively to try and fit in the 4096 byte data limit
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.2);
+            callback(dataUrl);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 function sendOrder() {
+    const btn = document.getElementById('mainBtn');
+    btn.textContent = "እየተላከ ነው...";
+    btn.disabled = true;
+
     const typeSelect = document.getElementById('design_type');
     const type = typeSelect.value;
     const typeText = typeSelect.options[typeSelect.selectedIndex].text;
     const instructions = document.getElementById('instructions').value;
-    
-    // Validate required fields (optional, but good practice)
-    if (instructions.trim() === '' && type === 'other') {
-        tg.showAlert("እባክዎትን መመሪያዎችን ያስገቡ!");
-        return;
-    }
     
     const data = {
         type: type,
@@ -61,12 +101,44 @@ function sendOrder() {
     } else {
         data.colors = document.getElementById('color_preference').value;
     }
+
+    const photoInput = document.getElementById('design-photo');
     
-    // Provide haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('success');
+    // If a photo is selected, read it as base64
+    if (photoInput.files && photoInput.files[0]) {
+        // We heavily resize to try to not break Telegram WebApp Data Limit limit
+        resizeImage(photoInput.files[0], 120, function(base64Image) {
+            data.photo = base64Image;
+            submitData(data);
+        });
+    } else {
+        submitData(data);
     }
-    
-    // Send data back to the bot
-    tg.sendData(JSON.stringify(data));
+}
+
+function submitData(data) {
+    try {
+        const payload = JSON.stringify(data);
+        
+        // Telegram limits data payload to exactly 4096 bytes.
+        if (new Blob([payload]).size > 4000) {
+             alert("የመረጡት ፎቶ መጠን አሁንም ትልቅ ነው። እባክዎ ፎቶውን ሳያካትቱ ይሞክሩ እና በኋላ በቦቱ ላይ ይላኩ።");
+             const btn = document.getElementById('mainBtn');
+             btn.textContent = "ትዕዛዝ ላክ";
+             btn.disabled = false;
+             return;
+        }
+
+        // Provide haptic feedback
+        if (tg.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+        // Send data back to the bot
+        tg.sendData(payload);
+    } catch (e) {
+        alert("ስህተት ተከስቷል።");
+        const btn = document.getElementById('mainBtn');
+        btn.textContent = "ትዕዛዝ ላክ";
+        btn.disabled = false;
+    }
 }

@@ -6,11 +6,11 @@
     <title>የንድፍ ትዕዛዝ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Modern CSS Style matching Telegram Dark Mode */
+        /* Premium Black and Gold Theme */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #18222d);
-            color: var(--tg-theme-text-color, #ffffff);
+            background-color: #121212;
+            color: #ffffff;
             margin: 0;
             padding: 20px;
         }
@@ -19,10 +19,14 @@
             margin: 0 auto;
         }
         h1 {
-            font-size: 22px;
+            font-size: 24px;
             text-align: center;
             margin-bottom: 25px;
-            color: var(--tg-theme-text-color, #ffffff);
+            color: #D4AF37;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
         .form-group {
             margin-bottom: 18px;
@@ -32,49 +36,98 @@
             margin-bottom: 8px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--tg-theme-hint-color, #8b9eb0);
+            color: #D4AF37;
         }
-        select, input, textarea {
+        select, input[type="text"], textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid transparent;
-            border-radius: 12px;
-            background-color: var(--tg-theme-secondary-bg-color, #242f3d);
-            color: var(--tg-theme-text-color, #ffffff);
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #1a1a1a;
+            color: #ffffff;
             box-sizing: border-box;
             font-family: inherit;
             font-size: 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
-        select:focus, input:focus, textarea:focus {
+        select:focus, input[type="text"]:focus, textarea:focus {
             outline: none;
-            border-color: var(--tg-theme-button-color, #3390ec);
-            box-shadow: 0 0 0 2px rgba(51, 144, 236, 0.2);
+            border-color: #D4AF37;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
         }
         textarea {
             resize: vertical;
             min-height: 80px;
         }
+        
+        /* File Input Styling */
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            border: 1px dashed #D4AF37;
+            border-radius: 8px;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .file-upload-wrapper:hover {
+            background-color: #222;
+        }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload-text {
+            color: #D4AF37;
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
         .btn {
             display: block;
             width: 100%;
             padding: 14px;
-            background-color: var(--tg-theme-button-color, #3390ec);
-            color: var(--tg-theme-button-text-color, #ffffff);
+            background: linear-gradient(135deg, #D4AF37, #AA8529);
+            color: #121212;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
             margin-top: 30px;
-            transition: background-color 0.2s;
+            transition: opacity 0.2s;
+            text-transform: uppercase;
         }
         .btn:hover {
             opacity: 0.9;
         }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .conditional-field {
             display: none;
             animation: fadeIn 0.3s ease;
+        }
+        .notice {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-left: 4px solid #D4AF37;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #aaa;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
@@ -109,7 +162,7 @@
 
         <div id="color_preference_group" class="form-group conditional-field">
             <label for="color_preference">የሚመርጡት ቀለማት / Preferred Colors</label>
-            <input type="text" id="color_preference" placeholder="ለምሳሌ: ቀይ እና ሰማያዊ">
+            <input type="text" id="color_preference" placeholder="ለምሳሌ: ጥቁር እና ወርቃማ">
         </div>
         
         <div class="form-group">
@@ -117,7 +170,19 @@
             <textarea id="instructions" placeholder="ስለ ንድፉ ዝርዝር መረጃ እዚህ ይጻፉ..."></textarea>
         </div>
 
+        <div class="form-group">
+            <label>ተጨማሪ ፎቶ / Reference Photo (አማራጭ)</label>
+            <div class="file-upload-wrapper">
+                <span class="file-upload-text" id="file-name-display">📸 ፎቶ ይምረጡ / Select Photo</span>
+                <input type="file" id="design-photo" accept="image/*" onchange="updateFileName()">
+            </div>
+        </div>
+
         <button id="mainBtn" class="btn" onclick="sendOrder()">ትዕዛዝ ላክ</button>
+
+        <div class="notice">
+            📝 ማስታወሻ፦ ተጨማሪ የድምፅ መልእክት ካለዎት ይህን መረጃ ከላኩ በኋላ በቦቱ ላይ በድምፅ መልዕክት ማስቀመጥ ይችላሉ።
+        </div>
     </div>
 
     <script src="script.js"></script>
