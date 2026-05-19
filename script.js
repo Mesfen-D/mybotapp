@@ -218,7 +218,15 @@ function sendOrder(e) {
         }
         
         // Execute Telegram WebApp sendData
-        tg.sendData(payload);
+        if (tg && typeof tg.sendData === 'function') {
+            tg.sendData(payload);
+            tg.close();
+        } else {
+            console.error("Telegram WebApp API is undefined or sendData is not a function.");
+            alert(translations[currentLang].errorMsg + "\n(tg.sendData fallback)");
+            btn.textContent = translations[currentLang].submitBtn;
+            btn.disabled = false;
+        }
         
     } catch (e) {
         console.error("Error sending data:", e);
