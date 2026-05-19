@@ -31,10 +31,14 @@ handleTypeChange();
 function updateFileName() {
     const input = document.getElementById('design-photo');
     const display = document.getElementById('file-name-display');
-    if (input.files && input.files[0]) {
-        display.textContent = "✅ " + input.files[0].name;
+    if (input.files && input.files.length > 0) {
+        if (input.files.length === 1) {
+            display.textContent = "✅ 1 ፎቶ ተመርጧል / 1 Photo Selected";
+        } else {
+            display.textContent = `✅ ${input.files.length} ፎቶዎች ተመርጠዋል / Photos Selected`;
+        }
     } else {
-        display.textContent = "📸 ፎቶ ይምረጡ / Select Photo";
+        display.textContent = "📸 ፎቶዎችን ይምረጡ / Select Photos";
     }
 }
 
@@ -67,7 +71,7 @@ function resizeImage(file, maxSize, callback) {
             ctx.drawImage(img, 0, 0, width, height);
             
             // Compress very aggressively to try and fit in the 4096 byte data limit
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.2);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.1); // Increased compression to allow multiple images
             callback(dataUrl);
         };
         img.src = e.target.result;
@@ -104,13 +108,23 @@ function sendOrder() {
 
     const photoInput = document.getElementById('design-photo');
     
-    // If a photo is selected, read it as base64
-    if (photoInput.files && photoInput.files[0]) {
-        // We heavily resize to try to not break Telegram WebApp Data Limit limit
-        resizeImage(photoInput.files[0], 120, function(base64Image) {
-            data.photo = base64Image;
-            submitData(data);
-        });
+    // If photos are selected, process each one as Base64
+    if (photoInput.files && photoInput.files.length > 0) {
+        data.photos = [];
+        let processedCount = 0;
+        const totalPhotos = photoInput.files.length;
+        
+        for (let i = 0; i < totalPhotos; i++) {
+            // We heavily resize to try to not break Telegram WebApp Data Limit limit
+            resizeImage(photoInput.files[i], 100, function(base64Image) {
+                data.photos.push(base64Image);
+                processedCount++;
+                
+                if (processedCount === totalPhotos) {
+                    submitData(data);
+                }
+            });
+        }
     } else {
         submitData(data);
     }
