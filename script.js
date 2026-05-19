@@ -220,7 +220,7 @@ function sendOrder(e) {
         // Execute Telegram WebApp sendData
         if (tg && typeof tg.sendData === 'function') {
             tg.sendData(payload);
-            tg.close();
+            tg.close(); // Closes the Telegram slider sheet immediately
         } else {
             console.error("Telegram WebApp API is undefined or sendData is not a function.");
             alert(translations[currentLang].errorMsg + "\n(tg.sendData fallback)");
