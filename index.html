@@ -59,7 +59,7 @@
             resize: vertical;
             min-height: 80px;
         }
-        
+
         .btn {
             display: block;
             width: 100%;
@@ -71,9 +71,15 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 20px;
             transition: opacity 0.2s;
             text-transform: uppercase;
+        }
+        .btn-secondary {
+            background: #1a1a1a;
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+            margin-top: 10px;
         }
         .btn:hover {
             opacity: 0.9;
@@ -89,16 +95,48 @@
         .notice {
             margin-top: 25px;
             padding: 15px;
-            background-color: rgba(212, 175, 55, 0.1);
-            border: 2px solid #D4AF37;
+            background-color: #1a1a1a;
+            border: 1px solid #D4AF37;
             border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
             color: #D4AF37;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
         }
+        .bank-details {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #D4AF37;
+        }
+        .bank-item {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .bank-item:last-child {
+            margin-bottom: 0;
+        }
+        .bank-name {
+            color: #D4AF37;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .bank-account {
+            color: #fff;
+            font-size: 18px;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .step.active {
+            display: block;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
@@ -107,44 +145,78 @@
 </head>
 <body>
     <div class="container">
-        <h1>ምን ማዘዝ ይፈልጋሉ?</h1>
-        <div class="form-group">
-            <label for="design_type">የንድፍ ዓይነት</label>
-            <select id="design_type" onchange="handleTypeChange()">
-                <option value="logo">ሎጎ (Logo)</option>
-                <option value="banner">ባነር (Banner)</option>
-                <option value="social_post">ለማህበራዊ ፖስት (Social Post)</option>
-                <option value="youtube_thumbnail">የዩቲዩብ ተምኔል (YouTube Thumbnail)</option>
-                <option value="business_card">ቢዝነስ ካርድ (Business Card)</option>
-                <option value="other">ሌላ (Other)</option>
-            </select>
-        </div>
-
-        <div id="company_name_group" class="form-group conditional-field">
-            <label for="company_name">የድርጅት ስም / Company Name</label>
-            <input type="text" id="company_name" placeholder="ድርጅትዎን ያስገቡ">
-        </div>
-
-        <div id="contact_details_group" class="form-group conditional-field">
-            <label for="contact_details">የመገናኛ አድራሻ / Contact Info</label>
-            <input type="text" id="contact_details" placeholder="ስልክ, ኢሜል...">
-        </div>
-
-        <div id="color_preference_group" class="form-group conditional-field">
-            <label for="color_preference">የሚመርጡት ቀለማት / Preferred Colors</label>
-            <input type="text" id="color_preference" placeholder="ለምሳሌ: ጥቁር እና ወርቃማ">
-        </div>
         
-        <div class="form-group">
-            <label for="instructions">ተጨማሪ መመሪያዎች / Additional Instructions</label>
-            <textarea id="instructions" placeholder="ስለ ንድፉ ዝርዝር መረጃ እዚህ ይጻፉ..."></textarea>
+        <!-- STEP 1: Design Details -->
+        <div id="step-1" class="step active">
+            <h1>ምን ማዘዝ ይፈልጋሉ?</h1>
+            
+            <div class="form-group">
+                <label for="design_type">የንድፍ ዓይነት</label>
+                <select id="design_type" onchange="handleTypeChange()">
+                    <option value="logo">ሎጎ (Logo)</option>
+                    <option value="banner">ባነር (Banner)</option>
+                    <option value="social_post">ለማህበራዊ ፖስት (Social Post)</option>
+                    <option value="youtube_thumbnail">የዩቲዩብ ተምኔል (YouTube Thumbnail)</option>
+                    <option value="business_card">ቢዝነስ ካርድ (Business Card)</option>
+                    <option value="other">ሌላ (Other)</option>
+                </select>
+            </div>
+
+            <div id="company_name_group" class="form-group conditional-field">
+                <label for="company_name">የድርጅት ስም / Company Name</label>
+                <input type="text" id="company_name" placeholder="ድርጅትዎን ያስገቡ">
+            </div>
+
+            <div id="contact_details_group" class="form-group conditional-field">
+                <label for="contact_details">የመገናኛ አድራሻ / Contact Info</label>
+                <input type="text" id="contact_details" placeholder="ስልክ, ኢሜል...">
+            </div>
+
+            <div id="color_preference_group" class="form-group conditional-field">
+                <label for="color_preference">የሚመርጡት ቀለማት / Preferred Colors</label>
+                <input type="text" id="color_preference" placeholder="ለምሳሌ: ጥቁር እና ወርቃማ">
+            </div>
+            
+            <div class="form-group">
+                <label for="instructions">ተጨማሪ መመሪያዎች / Additional Instructions</label>
+                <textarea id="instructions" placeholder="ስለ ንድፉ ዝርዝር መረጃ እዚህ ይጻፉ..."></textarea>
+            </div>
+
+            <button type="button" class="btn" onclick="nextStep()">ቀጥል / Next</button>
         </div>
 
-        <button id="mainBtn" class="btn" onclick="sendOrder()">ትዕዛዝ ላክ</button>
+        <!-- STEP 2: Payment Details -->
+        <div id="step-2" class="step">
+            <h1>የክፍያ መረጃ</h1>
+            
+            <div class="bank-details">
+                <div class="bank-item">
+                    <span class="bank-name">የኢትዮጵያ ንግድ ባንክ (CBE)</span>
+                    <span class="bank-account">100000000</span>
+                </div>
+                <div class="bank-item">
+                    <span class="bank-name">ቴሌብር (telebirr)</span>
+                    <span class="bank-account">0960898592</span>
+                </div>
+                <div class="bank-item">
+                    <span class="bank-name">የአቢሲኒያ ባንክ (BoA)</span>
+                    <span class="bank-account">123</span>
+                </div>
+            </div>
 
-        <div class="notice">
-            📝 ማስታወሻ፦ ለዲዛይኑ የሚገቡ ምስሎች ወይም ማሳያ የሚሆኑ ፎቶዎች ካሉዎት፣ እንዲሁም በድምፅ መልእክት ማስቀመጥ ከፈለጉ ይህን ገፅ ጨርሰው መረጃውን ከላኩ በኋላ ቦቱ ላይ ቀጥታ ማስገባት ይችላሉ።
+            <div class="form-group">
+                <label for="payment_ref">የክፍያ ማጣቀሻ ቁጥር (Reference Number)</label>
+                <input type="text" id="payment_ref" placeholder="የደረሰኝ ማጣቀሻ ቁጥር ያስገቡ">
+            </div>
+
+            <button id="mainBtn" class="btn" onclick="sendOrder()">ትዕዛዝ ላክ</button>
+            <button type="button" class="btn btn-secondary" onclick="prevStep()">ተመለስ / Back</button>
+
+            <div class="notice">
+                📝 ማስታወሻ፦ የከፈሉበትን ደረሰኝ (Screenshot)፣ ለዲዛይኑ የሚገቡ ምስሎችን ወይም የድምፅ መልእክት ይህን ገፅ ጨርሰው መረጃውን ከላኩ በኋላ ቦቱ ላይ ቀጥታ ማስገባት ይችላሉ።
+            </div>
         </div>
+
     </div>
 
     <script src="script.js"></script>

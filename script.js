@@ -28,6 +28,22 @@ function handleTypeChange() {
 // Initial setup
 handleTypeChange();
 
+function nextStep() {
+    document.getElementById('step-1').classList.remove('active');
+    document.getElementById('step-2').classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+function prevStep() {
+    document.getElementById('step-2').classList.remove('active');
+    document.getElementById('step-1').classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
 function sendOrder() {
     try {
         const btn = document.getElementById('mainBtn');
@@ -43,6 +59,7 @@ function sendOrder() {
         const company_name = document.getElementById('company_name') ? document.getElementById('company_name').value : '';
         const contact = document.getElementById('contact_details') ? document.getElementById('contact_details').value : '';
         const colors = document.getElementById('color_preference') ? document.getElementById('color_preference').value : '';
+        const payment_ref = document.getElementById('payment_ref') ? document.getElementById('payment_ref').value : '';
         
         const data = {
             type: type,
@@ -50,7 +67,8 @@ function sendOrder() {
             instructions: instructions,
             company_name: company_name,
             contact: contact,
-            colors: colors
+            colors: colors,
+            payment_ref: payment_ref
         };
         
         const payload = JSON.stringify(data);
