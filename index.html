@@ -148,10 +148,10 @@
         
         <!-- STEP 1: Design Details -->
         <div id="step-1" class="step active">
-            <h1>ምን ማዘዝ ይፈልጋሉ?</h1>
+            <h1 id="step1-title">ምን ማዘዝ ይፈልጋሉ?</h1>
             
             <div class="form-group">
-                <label for="design_type">የንድፍ ዓይነት</label>
+                <label for="design_type" id="design-type-label">የንድፍ ዓይነት</label>
                 <select id="design_type" onchange="handleTypeChange()">
                     <option value="logo">ሎጎ (Logo)</option>
                     <option value="banner">ባነር (Banner)</option>
@@ -163,35 +163,35 @@
             </div>
 
             <div id="company_name_group" class="form-group conditional-field">
-                <label for="company_name">የድርጅት ስም / Company Name</label>
+                <label for="company_name" id="company-name-label">የድርጅት ስም / Company Name</label>
                 <input type="text" id="company_name" placeholder="ድርጅትዎን ያስገቡ">
             </div>
 
             <div id="contact_details_group" class="form-group conditional-field">
-                <label for="contact_details">የመገናኛ አድራሻ / Contact Info</label>
+                <label for="contact_details" id="contact-details-label">የመገናኛ አድራሻ / Contact Info</label>
                 <input type="text" id="contact_details" placeholder="ስልክ, ኢሜል...">
             </div>
 
             <div id="color_preference_group" class="form-group conditional-field">
-                <label for="color_preference">የሚመርጡት ቀለማት / Preferred Colors</label>
+                <label for="color_preference" id="color-preference-label">የሚመርጡት ቀለማት / Preferred Colors</label>
                 <input type="text" id="color_preference" placeholder="ለምሳሌ: ጥቁር እና ወርቃማ">
             </div>
             
             <div class="form-group">
-                <label for="instructions">ተጨማሪ መመሪያዎች / Additional Instructions</label>
+                <label for="instructions" id="instructions-label">ተጨማሪ መመሪያዎች / Additional Instructions</label>
                 <textarea id="instructions" placeholder="ስለ ንድፉ ዝርዝር መረጃ እዚህ ይጻፉ..."></textarea>
             </div>
 
-            <button type="button" class="btn" onclick="nextStep()">ቀጥል / Next</button>
+            <button type="button" class="btn" id="next-btn" onclick="nextStep()">ቀጥል / Next</button>
 
-            <div class="notice">
+            <div class="notice" id="notice-1">
                 📝 ማስታወሻ፦ የከፈሉበትን ደረሰኝ (Screenshot)፣ ለዲዛይኑ የሚገቡ ምስሎችን ወይም የድምፅ መልእክት ይህን ገፅ ጨርሰው መረጃውን ከላኩ በኋላ ቦቱ ላይ ቀጥታ ማስገባት ይችላሉ።
             </div>
         </div>
 
         <!-- STEP 2: Payment Details -->
         <div id="step-2" class="step">
-            <h1>የክፍያ መረጃ</h1>
+            <h1 id="step2-title">የክፍያ መረጃ</h1>
             
             <div class="bank-details">
                 <div class="bank-item">
@@ -209,14 +209,14 @@
             </div>
 
             <div class="form-group">
-                <label for="payment_ref">የክፍያ ማጣቀሻ ቁጥር (Reference Number)</label>
+                <label for="payment_ref" id="payment-ref-label">የክፍያ ማጣቀሻ ቁጥር (Reference Number)</label>
                 <input type="text" id="payment_ref" placeholder="የደረሰኝ ማጣቀሻ ቁጥር ያስገቡ">
             </div>
 
             <button id="mainBtn" class="btn" onclick="sendOrder()">ትዕዛዝ ላክ</button>
-            <button type="button" class="btn btn-secondary" onclick="prevStep()">ተመለስ / Back</button>
+            <button type="button" class="btn btn-secondary" id="back-btn" onclick="prevStep()">ተመለስ / Back</button>
 
-            <div class="notice">
+            <div class="notice" id="notice-2">
                 📝 ማስታወሻ፦ የከፈሉበትን ደረሰኝ (Screenshot)፣ ለዲዛይኑ የሚገቡ ምስሎችን ወይም የድምፅ መልእክት ይህን ገፅ ጨርሰው መረጃውን ከላኩ በኋላ ቦቱ ላይ ቀጥታ ማስገባት ይችላሉ።
             </div>
         </div>
