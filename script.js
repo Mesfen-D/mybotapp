@@ -104,10 +104,10 @@ const translations = {
 
 function applyLanguage(lang) {
     const t = translations[lang];
-    
+
     document.getElementById('step1-title').textContent = t.step1Title;
     document.getElementById('design-type-label').textContent = t.designTypeLabel;
-    
+
     const select = document.getElementById('design_type');
     for (let i = 0; i < select.options.length; i++) {
         const val = select.options[i].value;
@@ -115,26 +115,26 @@ function applyLanguage(lang) {
             select.options[i].text = t.options[val];
         }
     }
-    
+
     document.getElementById('company-name-label').textContent = t.companyNameLabel;
     document.getElementById('company_name').placeholder = t.companyNamePlaceholder;
-    
+
     document.getElementById('contact-details-label').textContent = t.contactDetailsLabel;
     document.getElementById('contact_details').placeholder = t.contactDetailsPlaceholder;
-    
+
     document.getElementById('color-preference-label').textContent = t.colorPreferenceLabel;
     document.getElementById('color_preference').placeholder = t.colorPreferencePlaceholder;
-    
+
     document.getElementById('instructions-label').textContent = t.instructionsLabel;
     document.getElementById('instructions').placeholder = t.instructionsPlaceholder;
-    
+
     document.getElementById('next-btn').textContent = t.nextBtn;
     document.getElementById('notice-1').textContent = t.noticeText;
-    
+
     document.getElementById('step2-title').textContent = t.step2Title;
     document.getElementById('payment-ref-label').textContent = t.paymentRefLabel;
     document.getElementById('payment_ref').placeholder = t.paymentRefPlaceholder;
-    
+
     document.getElementById('mainBtn').textContent = t.submitBtn;
     document.getElementById('back-btn').textContent = t.backBtn;
     document.getElementById('notice-2').textContent = t.noticeText;
@@ -142,12 +142,12 @@ function applyLanguage(lang) {
 
 function handleTypeChange() {
     const type = document.getElementById('design_type').value;
-    
+
     // Hide all conditional fields first
     document.getElementById('company_name_group').style.display = 'none';
     document.getElementById('contact_details_group').style.display = 'none';
     document.getElementById('color_preference_group').style.display = 'none';
-    
+
     // Show relevant fields based on type
     if (type === 'logo') {
         document.getElementById('company_name_group').style.display = 'block';
@@ -168,7 +168,7 @@ handleTypeChange();
 function nextStep() {
     document.getElementById('step-1').classList.remove('active');
     document.getElementById('step-2').classList.add('active');
-    
+
     // Scroll to top
     window.scrollTo(0, 0);
 }
@@ -176,7 +176,7 @@ function nextStep() {
 function prevStep() {
     document.getElementById('step-2').classList.remove('active');
     document.getElementById('step-1').classList.add('active');
-    
+
     // Scroll to top
     window.scrollTo(0, 0);
 }
@@ -191,14 +191,14 @@ function sendOrder(e) {
         const typeSelect = document.getElementById('design_type');
         const type = typeSelect.value;
         const typeText = typeSelect.options[typeSelect.selectedIndex].text;
-        
+
         // Safely extract all inputs regardless of conditional display
         const instructions = document.getElementById('instructions') ? document.getElementById('instructions').value : '';
         const company_name = document.getElementById('company_name') ? document.getElementById('company_name').value : '';
         const contact = document.getElementById('contact_details') ? document.getElementById('contact_details').value : '';
         const colors = document.getElementById('color_preference') ? document.getElementById('color_preference').value : '';
         const payment_ref = document.getElementById('payment_ref') ? document.getElementById('payment_ref').value : '';
-        
+
         const data = {
             lang: currentLang,
             type: type,
@@ -209,14 +209,14 @@ function sendOrder(e) {
             colors: colors,
             payment_ref: payment_ref
         };
-        
+
         const payload = JSON.stringify(data);
-        
+
         // Provide haptic feedback if available
         if (tg.HapticFeedback) {
             tg.HapticFeedback.notificationOccurred('success');
         }
-        
+
         // Execute Telegram WebApp sendData
         if (tg && typeof tg.sendData === 'function') {
             tg.sendData(payload);
@@ -227,7 +227,7 @@ function sendOrder(e) {
             btn.textContent = translations[currentLang].submitBtn;
             btn.disabled = false;
         }
-        
+
     } catch (e) {
         console.error("Error sending data:", e);
         alert(translations[currentLang].errorMsg);
