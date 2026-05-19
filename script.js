@@ -29,47 +29,43 @@ function handleTypeChange() {
 handleTypeChange();
 
 function sendOrder() {
-    const btn = document.getElementById('mainBtn');
-    btn.textContent = "እየተላከ ነው...";
-    btn.disabled = true;
-
-    const typeSelect = document.getElementById('design_type');
-    const type = typeSelect.value;
-    const typeText = typeSelect.options[typeSelect.selectedIndex].text;
-    const instructions = document.getElementById('instructions').value;
-    
-    const data = {
-        type: type,
-        type_name: typeText,
-        instructions: instructions
-    };
-    
-    if (type === 'logo') {
-        data.company_name = document.getElementById('company_name').value;
-        data.colors = document.getElementById('color_preference').value;
-    } else if (type === 'business_card') {
-        data.company_name = document.getElementById('company_name').value;
-        data.contact = document.getElementById('contact_details').value;
-        data.colors = document.getElementById('color_preference').value;
-    } else {
-        data.colors = document.getElementById('color_preference').value;
-    }
-
-    submitData(data);
-}
-
-function submitData(data) {
     try {
+        const btn = document.getElementById('mainBtn');
+        btn.textContent = "እየተላከ ነው...";
+        btn.disabled = true;
+
+        const typeSelect = document.getElementById('design_type');
+        const type = typeSelect.value;
+        const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+        
+        // Safely extract all inputs regardless of conditional display
+        const instructions = document.getElementById('instructions') ? document.getElementById('instructions').value : '';
+        const company_name = document.getElementById('company_name') ? document.getElementById('company_name').value : '';
+        const contact = document.getElementById('contact_details') ? document.getElementById('contact_details').value : '';
+        const colors = document.getElementById('color_preference') ? document.getElementById('color_preference').value : '';
+        
+        const data = {
+            type: type,
+            type_name: typeText,
+            instructions: instructions,
+            company_name: company_name,
+            contact: contact,
+            colors: colors
+        };
+        
         const payload = JSON.stringify(data);
         
-        // Provide haptic feedback
+        // Provide haptic feedback if available
         if (tg.HapticFeedback) {
             tg.HapticFeedback.notificationOccurred('success');
         }
-        // Send data back to the bot
+        
+        // Execute Telegram WebApp sendData
         tg.sendData(payload);
+        
     } catch (e) {
-        alert("ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ።");
+        console.error("Error sending data:", e);
+        alert("ስህተት ተከስቷል። እባክዎ አፕሊኬሽኑን ከ Keyboard Button በመክፈት ይሞክሩ።");
         const btn = document.getElementById('mainBtn');
         btn.textContent = "ትዕዛዝ ላክ";
         btn.disabled = false;
