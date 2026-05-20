@@ -1,5 +1,11 @@
 // Initialize Telegram WebApp SDK
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram && window.Telegram.WebApp
+    ? window.Telegram.WebApp
+    : {
+        ready: function () {},
+        expand: function () {},
+        close: function () {}
+    };
 
 // Tell Telegram app the Web App is ready
 tg.ready();
